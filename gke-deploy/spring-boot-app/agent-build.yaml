@@ -7,7 +7,6 @@ spec:
   containers:
     - name: java-builder
       image: abhishekf5/maven-abhishek-docker-agent:v1
-      args: ["--user", "root"]
       volumeMounts:
         - name: docker-socket
           mountPath: /var/run/docker.sock
