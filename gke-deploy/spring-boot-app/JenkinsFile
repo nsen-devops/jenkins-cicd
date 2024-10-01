@@ -53,8 +53,6 @@ pipeline {
         steps {
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                 sh '''
-                    git clone https://github.com/nsen-devops/jenkins-cicd
-		    cd jenkins-cicd
                     git config user.email "nitin@xyz.com"
                     git config user.name "nitin"
                     BUILD_NUMBER=${BUILD_NUMBER}
