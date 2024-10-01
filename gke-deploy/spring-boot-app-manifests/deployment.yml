@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: spring-boot-app
-	image: nsendevops/cicd-with-jenkins:13
+	image: nsendevops/cicd-with-jenkins:${BUILD_NUMBER}
         ports:
         - containerPort: 8080
