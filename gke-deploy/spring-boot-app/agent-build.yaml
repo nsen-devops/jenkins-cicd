@@ -10,6 +10,8 @@ spec:
       volumeMounts:
         - name: docker-socket
           mountPath: /var/run/docker.sock
+  nodeSelector:
+    cloud.google.com/gke-nodepool: pool-2
   volumes:
     - name: docker-socket
       hostPath:
