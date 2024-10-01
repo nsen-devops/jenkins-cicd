@@ -6,9 +6,7 @@ metadata:
 spec:
   containers:
     - name: gcloud-builder
-      image: google/cloud-sdk
-      command: ["sleep"]
-      args: ["infinity"]
+      image: abhishekf5/maven-abhishek-docker-agent:v1
       volumeMounts:
         - name: docker-socket
           mountPath: /var/run/docker.sock
