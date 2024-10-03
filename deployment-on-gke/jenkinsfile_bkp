@@ -4,7 +4,7 @@ pipeline {
         PROJECT_ID = 'lucid-container-357617'
         CLUSTER_NAME = 'n-test-cicd-cluster'
         LOCATION = 'us-central1-f'
-#        CREDENTIALS_ID = 'gcp-cred'
+        CREDENTIALS_ID = 'gcp-cred'
     }
     stages {
         stage("Checkout code") {
@@ -31,10 +31,8 @@ pipeline {
         }        
         stage('Deploy to GKE') {
             steps{
-                withCredentials([file(credentialsId: 'gcp-workload-cred', variable: 'WIF')]) {
-                    sh "sed -i 's/hello-nodejs-app.*/hello-nodejs-app:${env.BUILD_ID}/g' deployment-on-gke/deployment.yaml"
-                    step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment-on-gke/deployment.yaml', credentialsId: $WIF, verifyDeployments: true])
-		    }
+                sh "sed -i 's/hello-nodejs-app.*/hello-nodejs-app:${env.BUILD_ID}/g' deployment-on-gke/deployment.yaml"
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment-on-gke/deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
             }
         }
     }    
