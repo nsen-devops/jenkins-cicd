@@ -11,7 +11,7 @@ pipeline {
         stage ("getting the WIF config file into a variable")
         {
             steps {
-                     withCredentials([file(credentialsId: 'gcloud-workload-cred', variable: 'WIF')]) 
+                     withCredentials([file(credentialsId: 'gcp-workload-cred', variable: 'WIF')]) 
                         {
                          sh '''
                             gcloud auth login --brief --cred-file=$WIF --quiet
