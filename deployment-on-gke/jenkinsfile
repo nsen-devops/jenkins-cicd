@@ -15,7 +15,7 @@ pipeline {
         stage("Build image") {
             steps {
                 script {
-                    myapp = docker.build("nsendevops/hello-nodejs-app:${env.BUILD_ID}")
+                    myapp = docker.build("nsendevops/hello-nodejs-app:${env.BUILD_ID}", "./deployment-on-gke")
                 }
             }
         }
