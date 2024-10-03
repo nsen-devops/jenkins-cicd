@@ -1,39 +1,27 @@
 pipeline {
     agent any
-    environment {
-        PROJECT_ID = 'lucid-container-357617'
-        CLUSTER_NAME = 'n-test-cicd-cluster'
-        LOCATION = 'us-central1-f'
-        CREDENTIALS_ID = 'gcp-workload-cred'
-    }
     stages {
-        stage("Checkout code") {
-            steps {
-                checkout scm
-            }
-        }
-        stage("Build image") {
+       stage("Generating OIDC token and saving it to a file") {
             steps {
                 script {
-                    myapp = docker.build("nsendevops/hello-nodejs-app:${env.BUILD_ID}", "./deployment-on-gke")
+                        sh (script: 'gcloud auth print-identity-token 594386561612-compute@developer.gserviceaccount.com
+  --audiences="//iam.googleapis.com/projects/594386561612/locations/global/workloadIdentityPools/for-jenkins-access-to-gcp/providers/jenkins"  > /usr/share/token/key',returnStdout: true)
                 }
             }
         }
-        stage("Push image") {
+        stage ("getting the WIF config file into a variable")
+        {
             steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-cred') {
-                            myapp.push("latest")
-                            myapp.push("${env.BUILD_ID}")
-                    }
+                     withCredentials([file(credentialsId: 'gcloud-workload-cred', variable: 'WIF')]) 
+                        {
+                         sh '''
+                            gcloud auth login --brief --cred-file=$WIF --quiet
+                            gcloud container clusters list
+                            gcloud compute instances list
+                            '''
+
+                        }
                 }
-            }
-        }        
-        stage('Deploy to GKE') {
-            steps{
-                sh "sed -i 's/hello-nodejs-app.*/hello-nodejs-app:${env.BUILD_ID}/g' deployment-on-gke/deployment.yaml"
-                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment-on-gke/deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
-            }
         }
-    }    
+    }
 }
