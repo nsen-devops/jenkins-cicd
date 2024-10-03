@@ -4,7 +4,7 @@ pipeline {
         PROJECT_ID = 'lucid-container-357617'
         CLUSTER_NAME = 'n-test-cicd-cluster'
         LOCATION = 'us-central1-f'
-#        CREDENTIALS_ID = 'gcp-cred'
+//        CREDENTIALS_ID = 'gcp-cred'
     }
     stages {
         stage("Checkout code") {
